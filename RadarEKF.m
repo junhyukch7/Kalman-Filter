@@ -16,7 +16,7 @@ if(isempty(firstRun))
     Q= 0.001*eye(3); Q(1,1) = 0;
     R= 10;
 end
-H = Hjacob2(x);
+H = Hjacob2(x); %Measurement system model is non-linear. must change linear sys by using jacobian matrix
     
 % prediction for estimation value and error
 xp = A * x;
@@ -33,20 +33,14 @@ pos = x(1); vel = x(2); alt = x(3);
 
 end
 
-function H = Hjacob(xp)
-
-x1 = xp(1);
-x3 = xp(3);
-H = [x1/sqrt(x1^2+x3^2) 0 x3/sqrt(x1^2+x3^2)];
-end
-
 function H = Hjacob2(xp)
 x1 = xp(1);
 x3 = xp(3);
-r = @(x1,x3) sqrt(x1.^2+x3.^2);
+r = @(x1,x3) sqrt(x1.^2+x3.^2); % variable x2 is not exit, so x2 diff = 0
 H = partial_diff(r,x1,x3,0.01,0.01);
 end
 
+% To find out first order difference, using central diffrence(numerical method)
 function H = partial_diff(f,x,y,dx,dy)
 
 dfdx1 = (f(x+dx,y) - f(x-dx,y))/(2*dx);
