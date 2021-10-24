@@ -1,9 +1,9 @@
 function [pos,vel,alt] = RadarEKF(z,dt)
 % input : 
-% A = system matrix using quaternion
-% z = position meaurement
+% z = Measurement distance
+% z = sampling time
 % output :
-% phi = roll, theta = pitch, psi = yaw
+% pos = horizontal distance beteween radar and obj, vel = obj speed, alt = obj height from road 
 persistent A Q R;
 persistent x P;
 persistent firstRun;
@@ -12,7 +12,7 @@ if(isempty(firstRun))
     firstRun = 1;
     x = [0 90 1100]'; % 수평거리 속도 고도
     A = eye(3) + [0 1 0;0 0 0;0 0 0]*dt;
-    P = 10*eye(3); %오차의 공분산과 시스템의 잡음공분산(Q)는 항상 행렬의 크기가 같아야 함
+    P = 10*eye(3); 
     Q= 0.001*eye(3); Q(1,1) = 0;
     R= 10;
 end
