@@ -3,14 +3,14 @@ function [pos,vel,alt] = RadarEKF(z,dt)
 % z = Measurement distance
 % z = sampling time
 % output :
-% pos = horizontal distance beteween radar and obj, vel = obj speed, alt = obj height from road 
+% pos = horizontal distance beteween radar and obj, vel = obj speed, alt = obj altitude
 persistent A Q R;
 persistent x P;
 persistent firstRun;
 
 if(isempty(firstRun))
     firstRun = 1;
-    x = [0 90 1100]'; % 수평거리 속도 고도
+    x = [0 90 1100]'; %inital value(horizontal dis, vel, alt)
     A = eye(3) + [0 1 0;0 0 0;0 0 0]*dt;
     P = 10*eye(3); 
     Q= 0.001*eye(3); Q(1,1) = 0;
