@@ -1,7 +1,8 @@
 function [phi,theta,psi] = EulerEKF(z,rates,dt)
 % input : 
-% A = system matrix using quaternion
-% z = position meaurement
+% z = position meaurement from accelerometer
+% rates = angular velocity from gyrometer
+% dt = samping time
 % output :
 % phi = roll, theta = pitch, psi = yaw
 persistent H Q R;
@@ -11,12 +12,15 @@ persistent firstRun;
 if(isempty(firstRun))
     firstRun = 1;
     x = [0 0 0]';% x(2):roll % x(3):pitch % x(4):yaw
-    P = 10*eye(3); %오차의 공분산과 시스템의 잡음공분산(Q)는 항상 행렬의 크기가 같아야 함
+    P = 10*eye(3); 
     H = [1 0 0;0 1 0];
     Q= 0.0001*eye(3); Q(3,3) = 0.1;
     R= 10*eye(2);
 end
-A = Ajacob(x,rates,dt);% 여기서 문제
+
+% system is non-linear so must change to linear system
+A = Ajacob(x,rates,dt);
+
 % prediction for estimation value and error
 xp = fx(x,rates,dt);
 Pp = A*P*A' + Q;
@@ -60,6 +64,7 @@ A(3,:) = partial_diff(x3,phi,theta,0,0.01,0.01,0.01);
 A = eye(3) + A*dt; %반드시 이산시스템으로 바꿔줘야함
 end
 
+% To find out first order difference, using central diffrence(numerical method)
 function H = partial_diff(f,x,y,z,dx,dy,dz)
 % x= phi(roll), y = theta(pitch), z = row(yaw)
 
