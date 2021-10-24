@@ -61,7 +61,7 @@ A(1,:) = partial_diff(x1,phi,theta,0,0.01,0.01,0.01);
 A(2,:) = partial_diff(x2,phi,theta,0,0.01,0.01,0.01);
 A(3,:) = partial_diff(x3,phi,theta,0,0.01,0.01,0.01);
 
-A = eye(3) + A*dt; %반드시 이산시스템으로 바꿔줘야함
+A = eye(3) + A*dt;
 end
 
 % To find out first order difference, using central diffrence(numerical method)
