@@ -17,7 +17,7 @@ pipeline
     
 4. 추정값 계산
 
-    <img src="https://latex.codecogs.com/png.image?\dpi{130}&space;\bg_white&space;\hat{x}_{k}&space;=&space;\hat{x}_{k}^{-}&plus;K_{k}(z_{k}-H\hat{x}_{k}^{-})" title="\bg_white \hat{x}_{k} = \hat{x}_{k}^{-}+K_{k}(z_{k}-H\hat{x}_{k}^{-})" /> 측정값 <img src="https://latex.codecogs.com/png.image?\dpi{120}&space;\bg_white&space;z_{k}" title="\bg_white z_{k}" />가 입력되면 추정값 <img src="https://latex.codecogs.com/png.image?\dpi{120}&space;\bg_white&space;\hat{x}_{k}" title="\bg_white \hat{x}_{k}" />을 계산
+    <img src="https://latex.codecogs.com/png.image?\dpi{130}&space;\bg_white&space;\hat{x}_{k}&space;=&space;\hat{x}_{k}^{-}&plus;K_{k}(z_{k}-H\hat{x}_{k}^{-})" title="\bg_white \hat{x}_{k} = \hat{x}_{k}^{-}+K_{k}(z_{k}-H\hat{x}_{k}^{-})" /> --> 측정값 <img src="https://latex.codecogs.com/png.image?\dpi{120}&space;\bg_white&space;z_{k}" title="\bg_white z_{k}" />가 입력되면 추정값 <img src="https://latex.codecogs.com/png.image?\dpi{120}&space;\bg_white&space;\hat{x}_{k}" title="\bg_white \hat{x}_{k}" />을 계산
     
 5. 오차 공분산 계산
 
