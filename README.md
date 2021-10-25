@@ -1,13 +1,12 @@
 # KalmanFilter
 
-### 1. Kalman Filter Algorithm
+### - Kalman Filter Algorithm PipeLine
 
-pipeline
-
-1. inital value setting
+1. 초기값 선정
 
      <img src="https://latex.codecogs.com/png.image?\dpi{130}&space;\bg_white&space;\hat{x}_{0},&space;P_{0}" title="\bg_white \hat{x}_{0}, P_{0}" />
-2. 추정값과 오차 공분산 예측
+     
+2. 추정값(1)과 오차 공분산 예측(2)
 
      <img src="https://latex.codecogs.com/png.image?\dpi{120}&space;\bg_white&space;\left\{\begin{matrix}\hat{x}_{k}^{-}&space;=&space;A&space;\hat{x}_{k-1}&space;\triangleright1&space;\\P_{k}^{-}&space;=&space;A&space;P_{k-1}A^{T}&space;&plus;&space;Q&space;\triangleright2\end{matrix}\right." title="\bg_white \left\{\begin{matrix}\hat{x}_{k}^{-} = A \hat{x}_{k-1} \triangleright1 \\P_{k}^{-} = A P_{k-1}A^{T} + Q \triangleright2\end{matrix}\right." />
      
