@@ -52,6 +52,16 @@
 
 ### 2. 추정 과정 : 칼만필터의 최종 결과물인 추정값을 계산하는 과정
 #### (PipeLine의 2-4번과정에 해당)
+ ```Matlab
+     % calculate gain
+     K = Pp*H'*inv(H*Pp*H'+R);
+     
+     % calculate estimation value
+     x = xp + K*(z-H*xp);
+     
+     % calculate error
+     P = Pp-(K*H*Pp);
+```
 
 - LPF와 유사한 칼만필터
 
