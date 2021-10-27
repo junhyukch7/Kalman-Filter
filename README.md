@@ -1,6 +1,8 @@
 # KalmanFilter
 
-### - Kalman Filter Algorithm PipeLine : 
+### - Kalman Filter : 선형시스템 
+
+- PipeLine
 
 ![image](https://user-images.githubusercontent.com/79674592/139003501-14f849e2-2b7b-418a-bb56-0b09f1254dbe.png)
 
