@@ -1,6 +1,6 @@
 # KalmanFilter
 
-### - Kalman Filter Algorithm PipeLine
+### - Kalman Filter Algorithm PipeLine : 
 
 ![image](https://user-images.githubusercontent.com/79674592/139003501-14f849e2-2b7b-418a-bb56-0b09f1254dbe.png)
 
@@ -35,6 +35,16 @@
 
    <img src="https://latex.codecogs.com/png.image?\dpi{120}&space;\bg_white&space;\left\{\begin{matrix}\hat{x}_{k}^{-}&space;=&space;A&space;\hat{x}_{k-1}&space;\triangleright1&space;\\P_{k}^{-}&space;=&space;A&space;P_{k-1}A^{T}&space;&plus;&space;Q&space;\triangleright2\end{matrix}\right." title="\bg_white \left\{\begin{matrix}\hat{x}_{k}^{-} = A \hat{x}_{k-1} \triangleright1 \\P_{k}^{-} = A P_{k-1}A^{T} + Q \triangleright2\end{matrix}\right." />
    
+   ```Matlab
+     % prediction for estimation value and error of EulerEKF.m
+     xp = fx(x,rates,dt);
+     Pp = A*P*A' + Q;
+     ---------------------------------------------
+     % prediction for estimation value and error of RadarEKF.m
+     xp = A * x;
+     Pp = A*P*A' + Q;
+   ```
+   
    첫번째 단계인 예측과정에서는 이전단계의 추정값을 사용하여 시스템모델과의 계산으로 추정값을 예측한다.
    이때, 예측한 값의 평균을 기준으로 멀리 떨어져 있는지 알기 위해 이전 오차공분산을 활용하여 새로운 오차공분산을 예측한다.
    
@@ -61,4 +71,30 @@
 
      또한 칼만이득의 경우 측정값의 노이즈 R과도 밀접한 연관이 있다. 노이즈가 커지게 되면 칼만이득의 크기가 작아지면서 측정값보다는 예측값을 더 신뢰하게 된다. 반대로 노이즈가 작아 칼만이득이 커지면, 측정값을 신뢰하여 더 큰 가중치를 부여하게 된다.
 
+---
 
+### - Extended Kalman Filter : 비선형 시스템
+
+EKF는 시스템모델이 비선형인 경우 적용가능한 필터이다.기본적인 알고리즘의 PipeLine은 선형 칼만필터 알고리즘과 동일하다. 다만 비선형인 시스템 모델(상태행렬,관측행렬)을 선형으로 근사시키기 위해 자코비안(Jacobian)을 활용하여 복잡하게 얽혀 잇는 식을 미분을 통해 근사 선형식을 만들게 된다.
+
+```Matlab
+A = Ajacob(x,rates,dt); %상태행렬이 비선형인경우(EuelrEKF.m)
+H = Hjacob2(x); %관측행렬이 비선형인경우(RadarEKF.m)
+```
+
+코드에서 볼 수 있듯이 먼저 비선형인 시스템을 선형으로 근사시키는 작업을 한 이후 예측과정과 추정과정을 반복하게 된다.
+
+이 때 자코비안 행렬은 모든 벡터들의 1차 편미분값으로 된 행렬로, 각 행렬의 값은 다변수 함수일 때의 미분값을 의미한다. 자코비안을 구하기 위해 수치해법의 유한차분의 방법 중 정확도가 가장 높은 중심차분을 이용하여 편미분을 하여 구하게 된다.
+
+```Matlab
+% To find out first order difference, using central diffrence(numerical method)
+function H = partial_diff(f,x,y,z,dx,dy,dz)
+% x= phi(roll), y = theta(pitch), z = row(yaw)
+
+dfdx1 = (f(x+dx,y,z) - f(x-dx,y,z))/(2*dx);
+dfdx2 = (f(x,y+dy,z) - f(x,y-dy,z))/(2*dy);
+dfdx3 = (f(x,y,z+dz) - f(x,y,z-dz))/(2*dz);
+
+H = [dfdx1 dfdx2 dfdx3];
+end
+```
