@@ -1,7 +1,7 @@
 function [pos,vel,alt] = RadarEKF(z,dt)
 % input : 
 % z = Measurement distance
-% z = sampling time
+% dt = sampling time
 % output :
 % pos = horizontal distance beteween radar and obj, vel = obj speed, alt = obj altitude
 persistent A Q R;
