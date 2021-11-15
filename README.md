@@ -111,8 +111,21 @@ H = [dfdx1 dfdx2 dfdx3];
 end
 ```
 
-- Richardson 외삽법 : 중심차분 미분 정확도 개선
+- Richardson 외삽법 : 수치미분 정확도 개선
      
+     미분값 그 자체를 기초로 하여 수치미분의 결과를 개선하는 방법들이 가능하다. 일반적으로 Richardson 외삽법이라고 하는 방법을 통해 두 개의 미분값을 적용하여 제3의 보다 정확한
+     근사값을 계산한다.
+     
+     O(h^2)의 오차를 가지는 2개의 중심차분 공식에 의한 미분값을 조합하여 O(h^4)의 오차를 가지는 새로운 미분값을 계산하게 된다. 이때 구간간격이 절반이 되는(h2=h1/2)특수한 경우에
+     다음과 같은 공식을 적용할 수 있다.
+     
+     <img src="https://latex.codecogs.com/png.image?\dpi{110}&space;\bg_white&space;I_{j,k}&space;=&space;\frac{4^{k-1}I_{j&plus;1,k-1}&space;-&space;I_{j,k-1}}{4^{k-1}-1}" title="\bg_white I_{j,k} = \frac{4^{k-1}I_{j+1,k-1} - I_{j,k-1}}{4^{k-1}-1}" />
+     
+     여기서 <img src="https://latex.codecogs.com/png.image?\dpi{110}&space;\bg_white&space;I_{j&plus;1,k-1},I_{j,k-1}" title="\bg_white I_{j+1,k-1},I_{j,k-1}" />은 각각 보다
+     정확한 적분값과 덜 정확한 적분값이며 <img src="https://latex.codecogs.com/png.image?\dpi{110}&space;\bg_white&space;I_{j,k}" title="\bg_white I_{j,k}" />는 개선된 적분값이다.
+     
+     즉 k=1일 때 원래의 중심차분 공식의 적분값에 해당하고 k=2일 때 O(h^4), k=3일 때 O(h^6)에 해당한다. 첨자j는 더정확하고 (j+1) 덜 정확한 추정값을 구별하기 위해 사용된다.
+     아래 코드를 적용하면 O(h^8)의 정확도를 가지는 미분값을 계산할 수 있다. 따라서 복잡한 방정식의 미분값을 보다 더 정확한 근사값을 통해 추정값의 오차를 줄일 수 있다.
      
 ```Matlab
 function dfdx = partial_diff_x(f,x,y,z,h)
@@ -130,7 +143,7 @@ end
 function [q,ea,iter]=rich(f,x,y,z,h,es,maxit,varargin)
 if nargin<5,error('at least 4 input arguments required'),end
 if nargin<6||isempty(es), es=0.000001;end
-if nargin<7||isempty(maxit), maxit=6;end
+if nargin<7||isempty(maxit), maxit=4;end
 n = 1;
 Dx(1,1) = partial_diff_x(f,x,y,z,h/n);
 Dy(1,1) = partial_diff_y(f,x,y,z,h/n);
