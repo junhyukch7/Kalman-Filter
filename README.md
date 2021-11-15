@@ -110,3 +110,50 @@ dfdx3 = (f(x,y,z+dz) - f(x,y,z-dz))/(2*dz);
 H = [dfdx1 dfdx2 dfdx3];
 end
 ```
+
+- Richardson 외삽법 : 중심차분 미분 정확도 개선
+     
+     
+```Matlab
+function dfdx = partial_diff_x(f,x,y,z,h)
+dfdx = (f(x+h,y,z) - f(x-h,y,z))/(2*h);
+end
+
+function dfdy = partial_diff_y(f,x,y,z,h)
+dfdy = (f(x,y+h,z) - f(x,y-h,z))/(2*h);
+end
+
+function dfdz = partial_diff_z(f,x,y,z,h)
+dfdz = (f(x,y,z+h) - f(x,y,z-h))/(2*h);
+end
+
+function [q,ea,iter]=rich(f,x,y,z,h,es,maxit,varargin)
+if nargin<5,error('at least 4 input arguments required'),end
+if nargin<6||isempty(es), es=0.000001;end
+if nargin<7||isempty(maxit), maxit=6;end
+n = 1;
+Dx(1,1) = partial_diff_x(f,x,y,z,h/n);
+Dy(1,1) = partial_diff_y(f,x,y,z,h/n);
+Dz(1,1) = partial_diff_z(f,x,y,z,h/n);
+iter = 0;
+
+while iter<maxit
+  iter = iter+1;
+  n = 2^iter;
+  Dx(iter+1,1) = partial_diff_x(f,x,y,z,h/n);
+  Dy(iter+1,1) = partial_diff_y(f,x,y,z,h/n);
+  Dz(iter+1,1) = partial_diff_z(f,x,y,z,h/n);
+  for k = 2:iter+1
+    j = 2+iter-k;
+    Dx(j,k) = (4^(k-1)*Dx(j+1,k-1)-Dx(j,k-1))/(4^(k-1)-1);
+    Dy(j,k) = (4^(k-1)*Dy(j+1,k-1)-Dy(j,k-1))/(4^(k-1)-1);
+    Dz(j,k) = (4^(k-1)*Dz(j+1,k-1)-Dz(j,k-1))/(4^(k-1)-1);
+  end
+  ea = abs((Dx(1,iter+1)-Dx(2,iter))/Dx(1,iter+1))*100;
+  if (ea<=es), break; end
+end
+
+q = [Dx(1,iter+1) Dy(1,iter+1) Dz(1,iter+1)];
+
+end
+```
